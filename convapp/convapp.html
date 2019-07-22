@@ -1,0 +1,88 @@
+
+
+
+<video id = "camera" width = "640" height = "640" autoplay></video>
+<button id = "Take Photo"> Take Photo </button>
+<button id = "upload"> Upload </button>
+<canvas id = "canvas" width = "640" height = "640"></canvas>
+
+<script>
+
+	// in order to get  this code to work with React one must use the DangerouslysetInnerHTML command from the basic React library
+
+
+
+	//this section sets up the camera
+	var video = document.getElementById('camera');
+
+	if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+		navigator.mediaDevices.getUserMedia({video: true}).then(function(stream) {
+
+			video.srcObject = stream;
+			video.play();
+		});
+
+	}
+
+
+	// This section sets up the camera and canvas so that one could take an image of what the camera displays
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext('2d');
+	var video = document.getElementById('camera');
+
+
+	//this section takes picture of what the canvas is currently portraying
+	document.getElementById('Take Photo').addEventListener("click", function() {
+		var image = context.drawImage(video, 0, 0, 640, 640);
+	});
+
+	//this block of code sends the image to the server 
+	document.getElementById('upload').addEventListener('click', function() {
+		//theis command creates a DOMString of the base64 data for the image
+		// please note that the toDataURL command only works in concert with canvas
+		image = canvas.toDataURL("image/png");
+		//These next two commands open a way to send the information to the server (XMLHttpRequest) and a location to store the info to be sent(FormData)
+		var request = new XMLHttpRequest();
+		var fd = new FormData();
+		// This command places the base64 data into the FormData container with the title 'picture'
+		fd.append('picture', image);
+		//This command declares the type of request the server will receive, the url for the server, and whether or not the request is asynchronous
+
+		//Also noe that the webhook url in this request is used to test what someone sends to a server. The service keeps track of the url for about 30 days until you need to get a new one
+		request.open('POST', 'https://webhook.site/e5810097-bee7-41c8-8a32-37cdf2655e09', true);
+		// This function gives a way to see if the request was sent or not with '200' being the success status
+		request.onload = function() {
+			if (request.status == 200) {
+				console.log('Uploaded');
+			} else {
+				console.log('It didnt work');
+			}
+		};
+		//this request sets the header for the request and basically allows the server to know what to expext
+		request.setRequestHeader('Content-Type', 'multipart/form-data');
+		//This command sends the image to the server
+		request.send(fd);
+	});
+
+
+//Everything below the scripts end-line creates aesthetic changes. Seeing as the above code gives the bare minimum for how to accomplish the goal of creating a camera app I couldn't change much of that code
+</script>
+
+
+<h1><font color = "#00FF00">
+ 	Convolutional Neural Network App
+		<body bgcolor = "#444444">
+			<h3>
+				<font color = '#DDA0DD'>
+					Please read the instructions completely before drawing anything
+					<ul>
+						<font color = "#00FF00">
+							<li> Please draw the answer to 2 fivers - 1 fiver</li>
+							<li> Please draw the answer to 1 box and one turtle - 1 box</li>
+							<li> Please draw the answer to 3 Boxes minus 2 Boxes </li>
+
+				</font>
+			</h3>
+		</body>
+	</font>
+</h1>
